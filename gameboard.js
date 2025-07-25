@@ -1,27 +1,142 @@
+import Ship from "./ship";
+
 class Gameboard {
   constructor() {
+    const noShip = { occupant: null, isHit: false };
+
     this._grid = [
-      [null, null, null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null, null, null],
-      [null, null, null, null, null, null, null, null, null, null],
+      [
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+      ],
+      [
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+      ],
+      [
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+      ],
+      [
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+      ],
+      [
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+      ],
+      [
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+      ],
+      [
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+      ],
+      [
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+      ],
+      [
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+      ],
+      [
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+        noShip,
+      ],
     ];
   }
-  placeShip(coordinate) {
-    const coordinates = coordinate.split("");
+  placeShip(coordinate, size) {
+    if (!/^[A-J](10|[1-9])$/.test(coordinate))
+      throw new Error("Invalid coordinate");
 
-    let yCoord = coordinates.slice(0, 1)[0]; // [0] converts array to string
-    let xCoord = coordinates.slice(1)[0] - 1; // minus 1 for 0 indexing
+    let yCoord = coordinate.substr(0, 1);
+    let xCoord = coordinate.substr(1) - 1; // minus 1 for array index starting at 0
 
     yCoord = this.convertLetterToDigit(yCoord);
 
-    this._grid[yCoord][xCoord] = true;
+    this._grid[yCoord][xCoord] = { occupant: new Ship(size), isHit: false };
   }
 
   convertLetterToDigit(letter) {
