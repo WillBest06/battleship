@@ -126,17 +126,44 @@ class Gameboard {
         noShip,
       ],
     ];
+    this._ships = [];
   }
-  placeShip(coordinate, size) {
+  placeShip(coordinate, size, direction) {
     if (!/^[A-J](10|[1-9])$/.test(coordinate))
       throw new Error("Invalid coordinate");
 
-    let yCoord = coordinate.substr(0, 1);
-    let xCoord = coordinate.substr(1) - 1; // minus 1 for array index starting at 0
+    let [yIndex, xIndex] = this.getCoordinateIndeces(coordinate);
 
-    yCoord = this.convertLetterToDigit(yCoord);
+    const newShip = new Ship(size);
 
-    this._grid[yCoord][xCoord] = { occupant: new Ship(size), isHit: false };
+    for (let i = 0; i < size; i++) {
+      this._grid[yIndex][xIndex] = { occupant: newShip, isHit: false };
+
+      if (direction === "y") {
+        yIndex++;
+      } else if ((direction = "x")) {
+        xIndex++;
+      }
+    }
+
+    this._ships.push(newShip);
+  }
+
+  receiveAttack(coordinate) {
+    let [yIndex, xIndex] = this.getCoordinateIndeces(coordinate);
+
+    this._grid[yIndex][xIndex]["isHit"] = true;
+    if (this._grid[yIndex][xIndex]["occupant"] !== null) {
+      this._grid[yIndex][xIndex]["occupant"].hit();
+    }
+  }
+
+  getCoordinateIndeces(coordinate) {
+    let yIndex = coordinate.substr(0, 1);
+    yIndex = this.convertLetterToDigit(yIndex);
+    let xIndex = coordinate.substr(1) - 1; // minus 1 for array index starting at 0
+
+    return [yIndex, xIndex];
   }
 
   convertLetterToDigit(letter) {
@@ -177,6 +204,16 @@ class Gameboard {
     }
 
     return letter;
+  }
+
+  allShipsSunk() {
+    let shipsSunk = true;
+
+    this._ships.forEach((ship) => {
+      if (!ship.isSunk()) shipsSunk = false;
+    });
+
+    return shipsSunk;
   }
 }
 
